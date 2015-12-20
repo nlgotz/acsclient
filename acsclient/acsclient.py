@@ -15,11 +15,15 @@ class ACSClient(object):
     def __init__(self, hostname, username, password,
                  hide_urllib_warnings=False):
         """ Class initialization method
+        
         :param hostname: Hostname or IP Address of Cisco ACS 5.6 Sever
+        :type hostname: str or unicode
         :param username: Cisco ACS admin user name
+        :type username: str or unicode
         :param password: Cisco ACS admin user password
-        :param hide_urllib_warnings: Hide urllib3 warnings when running queries
-                                     (optional)
+        :type password: str or unicode
+        :param hide_urllib_warnings: Hide urllib3 warnings (optional)
+        :type hide_urllib_warnings: boolean
         """
         self.url = "https://%s/Rest/" % (hostname)
         self.credentials = (username, password)
@@ -28,9 +32,13 @@ class ACSClient(object):
 
     def _req(self, method, frag, data=None):
         """ Creates the XML REST request to the Cisco ACS 5.6 Server
+        
         :param method: HTTP Method to use (GET, POST, DELETE, PUT)
+        :type method: str or unicode
         :param frag: URL fragment for request
+        :type frag: str or unicode
         :param data: XML data to send to the server (optional)
+        :type data: str or unicode
         """
         return requests.request(method, self.url + frag,
                                 data=data,
@@ -40,9 +48,13 @@ class ACSClient(object):
 
     def _frag(self, object_type, func, var):
         """ Creates the proper URL fragment for HTTP requests
+        
         :param object_type: Cisco ACS Object Type
+        :type object_type: str or unicode
         :param func: ACS method function
+        :type func: str or unicode
         :param var: ACS variable either the name or id
+        :type func: str or unicode
         """
         try:
             if object_type in self._object_types:
@@ -59,40 +71,60 @@ class ACSClient(object):
 
     def create(self, object_type, data):
         """ Create object on the ACS Server
+        
         :param object_type: Cisco ACS Object Type
+        :type object_type: str or unicode
         :param data: XML data to send to the ACS Server
+        :type data: str or unicode
         """
         return self._req("POST", object_type, data)
 
     def read(self, object_type, func="all", var=None):
         """ Read data from ACS Server
+        
         :param object_type: Cisco ACS Object Type
+        :type object_type: str or unicode
         :param func: ACS method function (optional)
+        :type func: str or unicode
         :param var: ACS variable either the name or id (optional)
+        :type var: str or unicode
         """
         return self._req("GET", self._frag(object_type, func, var))
 
     def update(self, object_type, data):
         """ Update object on the ACS Server
+        
         :param object_type: Cisco ACS Object Type
+        :type object_type: str or unicode
         :param data: XML data to send to the ACS Server
+        :type data: str or unicode
         """
         return self._req("PUT", object_type, data)
 
     def delete(self, object_type, func, var):
         """ Delete object on the ACS Server
+        
         :param object_type: Cisco ACS Object Type
+        :type object_type: str or unicode
         :param func: ACS method function
+        :type func: str or unicode
         :param var: ACS variable either the name or id
+        :type var: str, unicode, or int
         """
         return self._req("DELETE", self._frag(object_type, func, var))
 
-    def create_device_group(self, name, group_NetworkDevice/Devicetype):
-        """ Create a Device Group on the ACS Server.
-        This generates the proper XML to pass to the server
+    def create_device_group(self, name, group_type):
+        """ Create ACS Device Group
+        
+        Create a new Device Group on the server. This will generate the proper 
+        XML to pass to the server.
+        
         :param name: Full name of the Device Group
-        :param group_type: Type of ACS Device Group
-                (Location and Device type are the defaults in ACS 5.6)
+        :type name: str or unicode
+        :param group_type: Device Group Type
+        :type group_type: str or unicode
+        :returns: HTTP Response code
+        :rtype: requests.models.Response
         """
         ENV = Environment(loader=FileSystemLoader(
               os.path.join(os.path.dirname(__file__), "templates")))
@@ -103,12 +135,17 @@ class ACSClient(object):
 
     def create_tacacs_device(self, name, groups, secret, ip, mask=32):
         """ Create a new Device with TACACS
+        
         :param name: Device name
-        :param groups: dict for the groups. The keys are name and type.
-                The name needs to be the full name
+        :type name: str or unicode
+        :param groups: Groups list
+        :type groups: dict
         :param secret: TACACS secret key
+        :type secret: str or unicode
         :param ip: Device IP address
-        :param mask: Device IP mask (optional) (defaults to a /32)
+        :type ip: str or unicode
+        :param mask: Device IP mask (optional)
+        :type mask: int
         """
         ENV = Environment(loader=FileSystemLoader(
               os.path.join(os.path.dirname(__file__), "templates")))
@@ -119,11 +156,17 @@ class ACSClient(object):
 
     def create_device_simple(self, name, secret, ip, location, device_type):
         """ Simple way to create a new Device with TACACS
+        
         :param name: Device name
+        :type name: str or unicode
         :param secret: TACACS secret key
+        :type secret: str or unicode
         :param ip: Device IP address
+        :type ip: str or unicode
         :param location: Device Group Location
+        :type location: str or unicode
         :param device_type: Device Group Device Type
+        :type device_type: str or unicode
         """
         groups = [
                 {"name": "All Locations:" + location,
