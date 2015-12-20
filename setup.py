@@ -25,6 +25,8 @@ setup(
     zip_safe=False,
     install_requires=[
         'requests',
+		'jinja2',
+		'MarkupSafe'
         ],
     setup_requires=[],
     namespace_packages=[],

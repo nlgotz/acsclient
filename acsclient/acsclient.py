@@ -1,4 +1,6 @@
 import requests
+from jinja2 import Environment, FileSystemLoader
+import os
 
 
 class ACSClient(object):
@@ -85,46 +87,17 @@ class ACSClient(object):
         return self._req("DELETE", self._frag(object_type, func, var))
 
     def create_device_group(self, name, group_type):
-        data = """
-<ns1:deviceGroup xmlns:ns1="networkdevice.rest.mgmt.acs.nm.cisco.com">
-        <description />
-        <name>{name}</name>
-        <groupType>{group_type}</groupType>
-</ns1:deviceGroup>
-        """.format(
-                   name=name,
-                   group_type=group_type,
-        )
+        ENV = Environment(loader=FileSystemLoader(
+              os.path.join(os.path.dirname(__file__), "templates")))
+        template = ENV.get_template("devicegroup.j2")
+        var = dict(name=name, group_type=group_type)
+        data = template.render(config=var)
         return self.create("NetworkDevice/DeviceGroup", data)
 
-    def create_device(self, name, location, devicetype, ip, secret):
-        data = """
-<ns1:device xmlns:ns1="networkdevice.rest.mgmt.acs.nm.cisco.com">
-        <description />
-        <name>{name}</name>
-        <groupInfo>
-            <groupName>All Locations:{location}</groupName>
-            <groupType>Location</groupType>
-        </groupInfo>
-        <groupInfo>
-            <groupName>All Device Types:{devicetype}</groupName>
-            <groupType>Device Type</groupType>
-        </groupInfo>
-        <subnets>
-            <ipAddress>{ip}</ipAddress>
-            <netMask>32</netMask>
-        </subnets>
-        <tacacsConnection>
-            <legacyTACACS>true</legacyTACACS>
-            <sharedSecret>{secret}</sharedSecret>
-            <singleConnect>false</singleConnect>
-        </tacacsConnection>
-</ns1:device>
-        """.format(
-                name=name,
-                location=location,
-                devicetype=devicetype,
-                ip=ip,
-                secret=secret
-        )
+    def create_tacacs_device(self, name, ip, secret, groups):
+        ENV = Environment(loader=FileSystemLoader(
+              os.path.join(os.path.dirname(__file__), "templates")))
+        template = ENV.get_template("device.j2")
+        var = dict(name=name, ip=ip, secret=secret, groups=groups)
+        data = template.render(config=var)
         return self.create("NetworkDevice/Device", data)
