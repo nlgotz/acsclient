@@ -9,11 +9,14 @@ Install
 -------
 SwisClient should work with both Python2 and Python3
 
-Python2 Install from pip::
+Please note, ACSClient is not currently available on pypi or pip yet. Please
+follow the steps to build locally
+
+..Python2 Install from pip::
 
     pip install acsclient
 
-Python3 Install from pip3::
+..Python3 Install from pip3::
 
     pip3 install acsclient
 
