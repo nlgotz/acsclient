@@ -115,3 +115,19 @@ class ACSClient(object):
         var = dict(name=name, ip=ip, mask=mask, secret=secret, groups=groups)
         data = template.render(config=var)
         return self.create("NetworkDevice/Device", data)
+
+    def create_device_simple(self, name, secret, ip, location, device_type):
+        """ Simple way to create a new Device with TACACS
+        :param name: Device name
+        :param secret: TACACS secret key
+        :param ip: Device IP address
+        :param location: Device Group Location
+        :param device_type: Device Group Device Type
+        """
+        groups = [
+                {"name": "All Locations:" + location,
+                 "type": "Location"},
+                {"name": "All Device Types:" + device_type,
+                 "type": "Device Type"},
+        ]
+        return self.create_tacacs_device(name, groups, secret, ip)
