@@ -87,7 +87,7 @@ class ACSClient(object):
         """
         return self._req("DELETE", self._frag(object_type, func, var))
 
-    def create_device_group(self, name, group_type):
+    def create_device_group(self, name, group_NetworkDevice/Devicetype):
         """ Create a Device Group on the ACS Server.
         This generates the proper XML to pass to the server
         :param name: Full name of the Device Group
