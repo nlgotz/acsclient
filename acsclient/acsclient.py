@@ -5,9 +5,10 @@ import os
 
 class ACSClient(object):
 
-    _object_types = ['ACSVersion', 'ServiceLocation', 'ErrorMessage',
-                     'User', 'IdentityGroup', 'NetworkDevice/Device',
-                     'NetworkDevice/DeviceGroup', 'Host']
+    _object_types = ['Common/ACSVersion', 'Common/ServiceLocation',
+                     'ErrorMessage', 'User', 'IdentityGroup',
+                     'NetworkDevice/Device', 'NetworkDevice/DeviceGroup',
+                     'Host']
 
     _function_types = ['all', 'name', 'id']
 
