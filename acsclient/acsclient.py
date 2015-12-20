@@ -87,6 +87,12 @@ class ACSClient(object):
         return self._req("DELETE", self._frag(object_type, func, var))
 
     def create_device_group(self, name, group_type):
+        """ Create a Device Group on the ACS Server.
+        This generates the proper XML to pass to the server
+        :param name: Full name of the Device Group
+        :param group_type: Type of ACS Device Group
+                (Location and Device type are the defaults in ACS 5.6)
+        """
         ENV = Environment(loader=FileSystemLoader(
               os.path.join(os.path.dirname(__file__), "templates")))
         template = ENV.get_template("devicegroup.j2")
@@ -94,10 +100,18 @@ class ACSClient(object):
         data = template.render(config=var)
         return self.create("NetworkDevice/DeviceGroup", data)
 
-    def create_tacacs_device(self, name, ip, secret, groups):
+    def create_tacacs_device(self, name, groups, secret, ip, mask=32):
+        """ Create a new Device with TACACS
+        :param name: Device name
+        :param groups: dict for the groups. The keys are name and type.
+                The name needs to be the full name
+        :param secret: TACACS secret key
+        :param ip: Device IP address
+        :param mask: Device IP mask (optional) (defaults to a /32)
+        """
         ENV = Environment(loader=FileSystemLoader(
               os.path.join(os.path.dirname(__file__), "templates")))
         template = ENV.get_template("device.j2")
-        var = dict(name=name, ip=ip, secret=secret, groups=groups)
+        var = dict(name=name, ip=ip, mask=mask, secret=secret, groups=groups)
         data = template.render(config=var)
         return self.create("NetworkDevice/Device", data)

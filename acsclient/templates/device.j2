@@ -9,7 +9,7 @@
         {%- endfor %}
         <subnets>
             <ipAddress>{{config.ip}}</ipAddress>
-            <netMask>32</netMask>
+            <netMask>{{config.mask}}</netMask>
         </subnets>
         <tacacsConnection>
             <legacyTACACS>true</legacyTACACS>
