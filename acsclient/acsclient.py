@@ -113,7 +113,7 @@ class ACSClient(object):
         """
         return self._req("DELETE", self._frag(object_type, func, var))
 
-    def create_device_group(self, name, group_type):
+    def create_device_group(self, name, group_type, description=""):
         """ Create ACS Device Group
         
         Create a new Device Group on the server. This will generate the proper 
@@ -123,14 +123,18 @@ class ACSClient(object):
         :type name: str or unicode
         :param group_type: Device Group Type
         :type group_type: str or unicode
+        :param description: Group Description (optional)
+        :type description: str or unicode
         :returns: HTTP Response code
         :rtype: requests.models.Response
         """
         ENV = Environment(loader=FileSystemLoader(
               os.path.join(os.path.dirname(__file__), "templates")))
         template = ENV.get_template("devicegroup.j2")
-        var = dict(name=name, group_type=group_type)
+        var = dict(name=name, group_type=group_type, description=description)
         data = template.render(config=var)
+        print description
+        print data
         return self.create("NetworkDevice/DeviceGroup", data)
 
     def create_tacacs_device(self, name, groups, secret, ip, mask=32):
