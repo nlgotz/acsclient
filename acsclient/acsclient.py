@@ -133,8 +133,6 @@ class ACSClient(object):
         template = ENV.get_template("devicegroup.j2")
         var = dict(name=name, group_type=group_type, description=description)
         data = template.render(config=var)
-        print description
-        print data
         return self.create("NetworkDevice/DeviceGroup", data)
 
     def create_tacacs_device(self, name, groups, secret, ip, mask=32):
