@@ -12,7 +12,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='acsclient',
-    version='0.1',
+    version='1.0.0',
     description="Access Cisco ACS 5.6 API",
     classifiers=[],
     keywords='cisco acs access control',
