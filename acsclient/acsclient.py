@@ -6,7 +6,7 @@ import os
 class ACSClient(object):
 
     _object_types = ['Common/ACSVersion', 'Common/ServiceLocation',
-                     'ErrorMessage', 'User', 'IdentityGroup',
+                     'ErrorMessage', 'Identity/User', 'User', 'IdentityGroup',
                      'NetworkDevice/Device', 'NetworkDevice/DeviceGroup',
                      'Host']
 
@@ -152,6 +152,27 @@ class ACSClient(object):
         ENV = Environment(loader=FileSystemLoader(
               os.path.join(os.path.dirname(__file__), "templates")))
         template = ENV.get_template("device.j2")
+        var = dict(name=name, ip=ip, mask=mask, secret=secret, groups=groups)
+        data = template.render(config=var)
+        return self.create("NetworkDevice/Device", data)
+
+    def create_radius_device(self, name, groups, secret, ip, mask=32):
+        """ Create a new Device with TACACS
+        
+        :param name: Device name
+        :type name: str or unicode
+        :param groups: Groups list
+        :type groups: dict
+        :param secret: Radius secret key
+        :type secret: str or unicode
+        :param ip: Device IP address
+        :type ip: str or unicode
+        :param mask: Device IP mask (optional)
+        :type mask: int
+        """
+        ENV = Environment(loader=FileSystemLoader(
+              os.path.join(os.path.dirname(__file__), "templates")))
+        template = ENV.get_template("radius_device.j2")
         var = dict(name=name, ip=ip, mask=mask, secret=secret, groups=groups)
         data = template.render(config=var)
         return self.create("NetworkDevice/Device", data)
