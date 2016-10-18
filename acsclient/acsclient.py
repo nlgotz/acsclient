@@ -1,7 +1,8 @@
+from __future__ import print_function
+
 import requests
 from jinja2 import Environment, FileSystemLoader
 import os
-
 
 class ACSClient(object):
 
@@ -67,7 +68,7 @@ class ACSClient(object):
             else:
                 raise Exception
         except Exception:
-            print "Invalid object_type or function"
+            print("Invalid object_type or function")
 
     def create(self, object_type, data):
         """ Create object on the ACS Server
