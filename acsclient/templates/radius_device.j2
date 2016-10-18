@@ -1,0 +1,20 @@
+<ns1:device xmlns:ns1="networkdevice.rest.mgmt.acs.nm.cisco.com">
+        <description />
+        <name>{{config.name}}</name>
+        {%- for item in config.groups %}
+        <groupInfo>
+            <groupName>{{item.name}}</groupName>
+            <groupType>{{item.type}}</groupType>
+        </groupInfo>
+        {%- endfor %}
+        <subnets>
+            <ipAddress>{{config.ip}}</ipAddress>
+            <netMask>{{config.mask}}</netMask>
+        </subnets>
+        <radiusConnection>
+	    <displayedInHex>true</displayedInHex>
+	    <keyWrap>false</keyWrap>
+	    <portCoA>1700</portCoA>
+            <sharedSecret>{{config.secret}}</sharedSecret>
+        </radiusConnection>
+</ns1:device>
