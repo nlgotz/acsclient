@@ -15,7 +15,7 @@ class ACSClient(object):
     def __init__(self, hostname, username, password,
                  hide_urllib_warnings=False):
         """ Class initialization method
-        
+
         :param hostname: Hostname or IP Address of Cisco ACS 5.6 Sever
         :type hostname: str or unicode
         :param username: Cisco ACS admin user name
@@ -32,7 +32,7 @@ class ACSClient(object):
 
     def _req(self, method, frag, data=None):
         """ Creates the XML REST request to the Cisco ACS 5.6 Server
-        
+
         :param method: HTTP Method to use (GET, POST, DELETE, PUT)
         :type method: str or unicode
         :param frag: URL fragment for request
@@ -48,7 +48,7 @@ class ACSClient(object):
 
     def _frag(self, object_type, func, var):
         """ Creates the proper URL fragment for HTTP requests
-        
+
         :param object_type: Cisco ACS Object Type
         :type object_type: str or unicode
         :param func: ACS method function
@@ -67,11 +67,11 @@ class ACSClient(object):
             else:
                 raise Exception
         except Exception:
-            print "Invalid object_type or function"
+            print("Invalid object_type or function")
 
     def create(self, object_type, data):
         """ Create object on the ACS Server
-        
+
         :param object_type: Cisco ACS Object Type
         :type object_type: str or unicode
         :param data: XML data to send to the ACS Server
@@ -81,7 +81,7 @@ class ACSClient(object):
 
     def read(self, object_type, func="all", var=None):
         """ Read data from ACS Server
-        
+
         :param object_type: Cisco ACS Object Type
         :type object_type: str or unicode
         :param func: ACS method function (optional)
@@ -93,7 +93,7 @@ class ACSClient(object):
 
     def update(self, object_type, data):
         """ Update object on the ACS Server
-        
+
         :param object_type: Cisco ACS Object Type
         :type object_type: str or unicode
         :param data: XML data to send to the ACS Server
@@ -103,7 +103,7 @@ class ACSClient(object):
 
     def delete(self, object_type, func, var):
         """ Delete object on the ACS Server
-        
+
         :param object_type: Cisco ACS Object Type
         :type object_type: str or unicode
         :param func: ACS method function
@@ -115,10 +115,10 @@ class ACSClient(object):
 
     def create_device_group(self, name, group_type, description=""):
         """ Create ACS Device Group
-        
-        Create a new Device Group on the server. This will generate the proper 
+
+        Create a new Device Group on the server. This will generate the proper
         XML to pass to the server.
-        
+
         :param name: Full name of the Device Group
         :type name: str or unicode
         :param group_type: Device Group Type
@@ -129,7 +129,7 @@ class ACSClient(object):
         :rtype: requests.models.Response
         """
         ENV = Environment(loader=FileSystemLoader(
-              os.path.join(os.path.dirname(__file__), "templates")))
+            os.path.join(os.path.dirname(__file__), "templates")))
         template = ENV.get_template("devicegroup.j2")
         var = dict(name=name, group_type=group_type, description=description)
         data = template.render(config=var)
@@ -137,7 +137,7 @@ class ACSClient(object):
 
     def create_tacacs_device(self, name, groups, secret, ip, mask=32):
         """ Create a new Device with TACACS
-        
+
         :param name: Device name
         :type name: str or unicode
         :param groups: Groups list
@@ -150,7 +150,7 @@ class ACSClient(object):
         :type mask: int
         """
         ENV = Environment(loader=FileSystemLoader(
-              os.path.join(os.path.dirname(__file__), "templates")))
+            os.path.join(os.path.dirname(__file__), "templates")))
         template = ENV.get_template("device.j2")
         var = dict(name=name, ip=ip, mask=mask, secret=secret, groups=groups)
         data = template.render(config=var)
@@ -158,7 +158,7 @@ class ACSClient(object):
 
     def create_radius_device(self, name, groups, secret, ip, mask=32):
         """ Create a new Device with TACACS
-        
+
         :param name: Device name
         :type name: str or unicode
         :param groups: Groups list
@@ -171,7 +171,7 @@ class ACSClient(object):
         :type mask: int
         """
         ENV = Environment(loader=FileSystemLoader(
-              os.path.join(os.path.dirname(__file__), "templates")))
+            os.path.join(os.path.dirname(__file__), "templates")))
         template = ENV.get_template("radius_device.j2")
         var = dict(name=name, ip=ip, mask=mask, secret=secret, groups=groups)
         data = template.render(config=var)
@@ -179,7 +179,7 @@ class ACSClient(object):
 
     def create_device_simple(self, name, secret, ip, location, device_type):
         """ Simple way to create a new Device with TACACS
-        
+
         :param name: Device name
         :type name: str or unicode
         :param secret: TACACS secret key
@@ -192,9 +192,9 @@ class ACSClient(object):
         :type device_type: str or unicode
         """
         groups = [
-                {"name": "All Locations:" + location,
-                 "type": "Location"},
-                {"name": "All Device Types:" + device_type,
-                 "type": "Device Type"},
+            {"name": "All Locations:" + location,
+                "type": "Location"},
+            {"name": "All Device Types:" + device_type,
+                "type": "Device Type"},
         ]
         return self.create_tacacs_device(name, groups, secret, ip)

@@ -30,17 +30,21 @@ How to Use
 
 Example::
 
-    import acsclient
-    acs = acsclient.ACSClient("192.168.1.11", "api", "password123", True)
-    
+    if sys.version_info[0] == 3:
+        from acsclient.acsclient import ACSClient
+        acs = ACSClient("192.168.1.11", "api", "password123", True)
+    else:
+        import acsclient
+        acs = acsclient.ACSClient("192.168.1.11", "api", "password123", True)
+
     #Read all Devices
     r = acs.read("NetworkDevice/Device")
     print r.content
-    
+
     #Read Specific Device
     r = acs.read("NetworkDevice/Device", "name", "ROUTER01")
     print r.content
-    
+
     #Create new Device
     groups = [
             {"name": "All Locations:Site", "type": "Location"},
