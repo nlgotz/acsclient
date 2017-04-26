@@ -135,7 +135,7 @@ class ACSClient(object):
         data = template.render(config=var)
         return self.create("NetworkDevice/DeviceGroup", data)
 
-    def create_tacacs_device(self, name, groups, secret, ip, description, mask=32):
+    def create_tacacs_device(self, name, groups, secret, ip, description="", mask=32):
         """ Create a new Device with TACACS
 
         :param name: Device name
@@ -146,7 +146,7 @@ class ACSClient(object):
         :type secret: str or unicode
         :param ip: Device IP address
         :type ip: str or unicode
-        :param description: Device description field
+        :param description: Device description field (optional)
         :type description: str or unicode
         :param mask: Device IP mask (optional)
         :type mask: int
