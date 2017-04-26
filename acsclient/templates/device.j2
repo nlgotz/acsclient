@@ -1,5 +1,5 @@
 <ns1:device xmlns:ns1="networkdevice.rest.mgmt.acs.nm.cisco.com">
-        <description />
+        <description>{{ config.description }}</description>
         <name>{{config.name}}</name>
         {%- for item in config.groups %}
         <groupInfo>
