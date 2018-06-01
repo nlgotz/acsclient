@@ -25,7 +25,7 @@ class ACSClient(object):
         :param hide_urllib_warnings: Hide urllib3 warnings (optional)
         :type hide_urllib_warnings: boolean
         """
-        self.url = "https://%s/Rest/" % (hostname)
+        self.url = "https://%s/Rest/" % hostname
         self.credentials = (username, password)
         self.session = requests.Session()
         if hide_urllib_warnings:
