@@ -18,7 +18,7 @@ setup(
     keywords='cisco acs access control acsclient',
     author='Nathan Gotz',
     author_email='nathan@gotz.co',
-    url='https://github.com/andy-shady-org/acsclient',
+    url='https://github.com/nlgotz/acsclient',
     license='Apache 2.0',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     include_package_data=True,
