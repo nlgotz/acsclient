@@ -12,13 +12,13 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='acsclient',
-    version='1.0.6',
+    version='1.0.6a',
     description="Access Cisco ACS 5.6 API",
     classifiers=[],
     keywords='cisco acs access control acsclient',
     author='Nathan Gotz',
     author_email='nathan@gotz.co',
-    url='https://github.com/nlgotz/acsclient',
+    url='https://github.com/andy-shady-org/acsclient',
     license='Apache 2.0',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     include_package_data=True,
