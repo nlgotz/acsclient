@@ -25,8 +25,9 @@ class ACSClient(object):
         :param hide_urllib_warnings: Hide urllib3 warnings (optional)
         :type hide_urllib_warnings: boolean
         """
-        self.url = "https://%s/Rest/" % (hostname)
+        self.url = "https://%s/Rest/" % hostname
         self.credentials = (username, password)
+        self.session = requests.Session()
         if hide_urllib_warnings:
             requests.packages.urllib3.disable_warnings()
 
@@ -40,11 +41,18 @@ class ACSClient(object):
         :param data: XML data to send to the server (optional)
         :type data: str or unicode
         """
-        return requests.request(method, self.url + frag,
-                                data=data,
-                                verify=False,
-                                auth=self.credentials,
-                                headers={'Content-Type': 'application/xml'})
+        method = method.lower()
+        headers = {'Content-Type': 'application/xml'}
+        ssl_check = False
+        self.session.auth = self.credentials
+        if method == 'get':
+            return self.session.get(self.url + frag, verify=ssl_check, data=data, headers=headers)
+        elif method == 'post':
+            return self.session.post(self.url + frag, verify=ssl_check, data=data, headers=headers)
+        elif method == 'put':
+            return self.session.put(self.url + frag, verify=ssl_check, data=data, headers=headers)
+        elif method == 'delete':
+            return self.session.delete(self.url + frag, verify=ssl_check, data=data, headers=headers)
 
     def _frag(self, object_type, func, var):
         """ Creates the proper URL fragment for HTTP requests
