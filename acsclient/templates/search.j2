@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <ns2:query xmlns:ns2="query.rest.mgmt.acs.nm.cisco.com">
+        <criteria xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns2:AndFilter">
+            <simpleFilters>
+                <propertyName>{{ config.key }}</propertyName>
+                <operation>{{ config.filter }}</operation>
+                <value>{{ config.value }}</value>
+            </simpleFilters>
+        </criteria>
+        <numberofItemsInPage>100</numberofItemsInPage>
+        <startPageNumber>1</startPageNumber>
+    </ns2:query>
+

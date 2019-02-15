@@ -5,6 +5,8 @@ ACSClient is a Python wrapper for accessing a Cisco ACS server. I only have
 access to a Cisco ACS 5.6 Server, so any previous or future ACS versions may not
 work with this package.
 
+Note: All functionality has been tested on Cisco ACS 5.8 Server
+
 Install
 -------
 ACSClient should work with both Python2 and Python3
@@ -52,6 +54,9 @@ Example::
             {"name": "CO:My Co", "type": "Company"},
     ]
     r = acs.create_tacacs_device("ROUTER02", groups, "s3cr37", "10.1.1.1")
+
+    #Search TACACS
+    r = acs.search_tacacs("NetworkDevice/Device", "ipAddress", "1.1.1.1", "EQUALS")
 
 License
 -------
