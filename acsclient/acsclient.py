@@ -10,7 +10,7 @@ class ACSClient(object):
                      'NetworkDevice/Device', 'NetworkDevice/DeviceGroup',
                      'Host']
 
-    _function_types = ['all', 'name', 'id']
+    _function_types = ['all', 'name', 'id', 'op']
 
     def __init__(self, hostname, username, password,
                  hide_urllib_warnings=False):
@@ -29,7 +29,10 @@ class ACSClient(object):
         self.credentials = (username, password)
         self.session = requests.Session()
         if hide_urllib_warnings:
-            requests.packages.urllib3.disable_warnings()
+            #############################################################################
+            # Disable "InsecureRequestWarning: Unverified HTTPS request is being made."
+            requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
+            #############################################################################
 
     def _req(self, method, frag, data=None):
         """ Creates the XML REST request to the Cisco ACS 5.6 Server
@@ -54,7 +57,7 @@ class ACSClient(object):
         elif method == 'delete':
             return self.session.delete(self.url + frag, verify=ssl_check, data=data, headers=headers)
 
-    def _frag(self, object_type, func, var):
+    def _frag(self, object_type, func, var=None):
         """ Creates the proper URL fragment for HTTP requests
 
         :param object_type: Cisco ACS Object Type
@@ -62,19 +65,23 @@ class ACSClient(object):
         :param func: ACS method function
         :type func: str or unicode
         :param var: ACS variable either the name or id
-        :type func: str or unicode
+        :type var: str or unicode
         """
         try:
             if object_type in self._object_types:
                 if func in self._function_types:
                     if func == "all":
                         frag = object_type
+                    elif func == 'op':
+                        frag = object_type + "/" + func + "/query"
                     else:
                         frag = object_type + "/" + func + "/" + str(var)
                     return frag
+                else:
+                    raise Exception
             else:
                 raise Exception
-        except Exception:
+        except (TypeError, Exception):
             print("Invalid object_type or function")
 
     def create(self, object_type, data):
@@ -208,3 +215,32 @@ class ACSClient(object):
                 "type": "Device Type"},
         ]
         return self.create_tacacs_device(name, groups, secret, ip)
+
+    def search_tacacs(self, object_type, key, value, condition):
+        """
+        Search for a value within TACACS
+
+        The following conditions are supported for filtering:
+            - CONTAINS
+            - DOES_NOT_CONTAIN
+            - ENDS_WITH
+            - EQUALS
+            - NOT_EMPTY
+            - NOT_EQUALS
+            - STARTS_WITH
+
+        :param object_type: Cisco ACS Object Type
+        :type object_type: str or unicode
+        :param key: Key to search
+        :type key: str or unicode
+        :param value: value to search for
+        :type value: str
+        :param condition: condition to match
+        :type condition: str
+        """
+        ENV = Environment(loader=FileSystemLoader(
+            os.path.join(os.path.dirname(__file__), "templates")))
+        template = ENV.get_template("search.j2")
+        var = dict(key=key, filter=condition, value=value)
+        data = template.render(config=var)
+        return self.update(self._frag(object_type, 'op'), data)
